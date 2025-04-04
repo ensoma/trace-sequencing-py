@@ -13,8 +13,10 @@ SOFTCLIP_INDEX = 4
 
 def softclipped_bases(
     read: pysam.AlignedSegment,
-) -> int:
+) -> int | None:
     """Get the number of softclipped bases from the R1 5' end."""
+    if not read.cigartuples:
+        return None
     if read.is_reverse:
         if read.cigartuples[-1][0] == SOFTCLIP_INDEX:  # Soft clip at end
             return read.cigartuples[-1][1]
@@ -33,19 +35,25 @@ def fiveprime_filter(
 ) -> None:
     """Filter R1 reads with too many softclipped bases on the 5' end."""
     # Set the output mode based on the output format and compression options
-    output_mode = get_output_mode(outfile_format, uncompressed)
+    output_mode = get_output_mode(
+        outfile_format, uncompressed=uncompressed
+    )
 
     with ExitStack() as stack:
         infile_handle = stack.enter_context(
-            pysam.AlignmentFile(infile),
+            pysam.AlignmentFile(str(infile)),
         )
         outfile_handle = stack.enter_context(
-            pysam.AlignmentFile(outfile, mode=output_mode, template=infile_handle),
+            pysam.AlignmentFile(
+                str(outfile),
+                mode=output_mode,
+                template=infile_handle
+            ),
         )
         discarded_handle = (
             stack.enter_context(
                 pysam.AlignmentFile(
-                    discarded_outfile,
+                    str(discarded_outfile),
                     mode=output_mode,
                     template=infile_handle,
                 ),
@@ -67,7 +75,7 @@ def fiveprime_filter(
             # If the read is R1, check if there are too many softclipped bases.
             # Needs to be strand-aware.
             softclipped = softclipped_bases(read)
-            if softclipped <= max_softclip:
+            if softclipped and softclipped <= max_softclip:
                 outfile_handle.write(read)
                 continue
             if discarded_handle:
