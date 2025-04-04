@@ -40,7 +40,7 @@ def alt_sup_filtering(
     """Filter SAM/BAM file based on ALT and SUP filtering options."""
     # Set the output mode based on the output format and compression options
     output_mode = get_output_mode(
-        output_format, uncompressed=uncompressed
+        output_format, uncompressed=uncompressed,
     )
 
     # Open the input and output files

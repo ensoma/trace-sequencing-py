@@ -36,7 +36,7 @@ def fiveprime_filter(
     """Filter R1 reads with too many softclipped bases on the 5' end."""
     # Set the output mode based on the output format and compression options
     output_mode = get_output_mode(
-        outfile_format, uncompressed=uncompressed
+        outfile_format, uncompressed=uncompressed,
     )
 
     with ExitStack() as stack:
@@ -47,7 +47,7 @@ def fiveprime_filter(
             pysam.AlignmentFile(
                 str(outfile),
                 mode=output_mode,
-                template=infile_handle
+                template=infile_handle,
             ),
         )
         discarded_handle = (
