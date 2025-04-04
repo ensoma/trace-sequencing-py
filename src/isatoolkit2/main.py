@@ -9,6 +9,7 @@ from annotated_types import Ge, Le
 from isatoolkit2.sam.fiveprime_filter import fiveprime_filter
 from isatoolkit2.sam.mapping_filter import alt_sup_filtering
 from isatoolkit2.utils import SamBamInputType, SamBamOutputType
+from isatoolkit2.sam.count import count_integration_sites
 
 # Custom click types
 SAMBAM_INPUT = SamBamInputType()
@@ -158,6 +159,32 @@ def fiveprime_filter_cmd(
         outfile_format=outfile_format,
         uncompressed=uncompressed,
         discarded_outfile=discarded_outfile,
+    )
+
+@sam.command("count")
+@click.option(
+    "-i", "--infile",
+    "infile",
+    type=SAMBAM_INPUT,
+    default="-", show_default=True,
+    help="Input SAM/BAM file or stdin (use '-' for stdin)",
+)
+@click.option(
+    "-o", "--outfile",
+    "outfile",
+    type=click.File("w"),
+    default="-", show_default=True,
+    help="Output BED file or stdout (use '-' for stdout)",
+)
+def count_cmd(
+    infile: Literal["-"] | Path,
+    outfile: Literal["-"] | Path,
+) -> None:
+    """Count integration sites in a SAM/BAM file."""
+
+    count_integration_sites(
+        infile=infile,
+        outfile=outfile,
     )
 
 # The CLI entry point
