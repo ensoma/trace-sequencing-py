@@ -78,5 +78,8 @@ def fiveprime_filter(
             if softclipped and softclipped <= max_softclip:
                 outfile_handle.write(read)
                 continue
+
+            # If the R1 read is mapped and has too many softclipped bases,
+            # write it to the discard file.
             if discarded_handle:
                 discarded_handle.write(read)
