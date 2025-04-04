@@ -24,7 +24,7 @@ class AltSupCounts:
         return (
             f"Total: {self.total}\n"
             f"Passing: {self.passing}\n"
-            f"ALT or SUP: {self.alt}\n"
+            f"ALT or SUP: {self.alt_or_sup}\n"
         )
 
 def alt_sup_filtering(
@@ -39,22 +39,24 @@ def alt_sup_filtering(
 ) -> None:
     """Filter SAM/BAM file based on ALT and SUP filtering options."""
     # Set the output mode based on the output format and compression options
-    output_mode = get_output_mode(output_format, uncompressed)
+    output_mode = get_output_mode(
+        output_format, uncompressed=uncompressed
+    )
 
     # Open the input and output files
     counts = AltSupCounts()
 
     with ExitStack() as stack:
         infile_handle = stack.enter_context(
-            pysam.AlignmentFile(infile),
+            pysam.AlignmentFile(str(infile)),
         )
         outfile_handle = stack.enter_context(
-            pysam.AlignmentFile(outfile, mode=output_mode, template=infile_handle),
+            pysam.AlignmentFile(str(outfile), mode=output_mode, template=infile_handle),
         )
         discarded_handle = (
             stack.enter_context(
                 pysam.AlignmentFile(
-                    discarded_outfile,
+                    str(discarded_outfile),
                     mode=output_mode,
                     template=infile_handle,
                 ),
