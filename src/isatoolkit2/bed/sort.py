@@ -14,10 +14,7 @@ def natural_key(string: str) -> list[str | int]:
 def sort_bed(
     infile: click.utils.LazyFile | TextIO,
     outfile: click.utils.LazyFile | TextIO,
-    sort_by: Annotated[
-        Literal["position", "score"],
-        Field(default="position"),
-    ],
+    sort_by: Literal["position", "score"] = "position",
 ) -> None:
     """Sort BED file by position or score."""
     lines = [line.strip() for line in infile]
