@@ -1,15 +1,11 @@
 """Sort BED file by position or score."""
 
-import re
-from typing import Annotated, Literal, TextIO
+from typing import Literal, TextIO
 
 import click
-from pydantic import Field
 
+from isatoolkit2.bed.bed_utils import natural_key
 
-def natural_key(string: str) -> list[str | int]:
-    """Generate a key for natural sorting."""
-    return [int(s) if s.isdigit() else s.lower() for s in re.split(r"(\d+)", string)]
 
 def sort_bed(
     infile: click.utils.LazyFile | TextIO,
@@ -24,6 +20,7 @@ def sort_bed(
         lines.sort(key=lambda line: (
             natural_key(line.split("\t")[0]),
             int(line.split("\t")[1]),
+            natural_key(line.split("\t")[5]),
         ))
     elif sort_by == "score":
         # Sort by score (fifth column) in descending order
