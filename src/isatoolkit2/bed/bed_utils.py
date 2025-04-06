@@ -10,7 +10,13 @@ from pydantic import BaseModel, ConfigDict
 
 def natural_key(string: str) -> list[str | int]:
     """Generate a key for natural sorting."""
-    return [int(s) if s.isdigit() else s.lower() for s in re.split(r"(\d+)", string)]
+    # Split the string into alternating non-digit and digit parts,
+    # adn filter out empty strings.
+    return [
+        int(s) if s.isdigit()
+        else s.lower() for s in re.split(r"(\d+)", string)
+        if s
+    ]
 
 class Strand(Enum):
 
@@ -31,5 +37,5 @@ class BedLine(BaseModel):
     strand: Strand
 
     model_config = ConfigDict(
-        use_enum_values = True
+        use_enum_values = True,
     )
