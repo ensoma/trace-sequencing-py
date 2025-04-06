@@ -53,6 +53,53 @@ def sort_cmd(
         sort_by=sort_by,
     )
 
+@bed.command("merge")
+@click.option(
+    "-i", "--infile",
+    "infile",
+    type=click.File("r"),
+    default="-", show_default=True,
+    help="Input BED file or stdin (use '-' for stdin)",
+)
+@click.option(
+    "-o", "--outfile",
+    "outfile",
+    type=click.File("w"),
+    default="-", show_default=True,
+    help="Output BED file or stdout (use '-' for stdout)",
+)
+@click.option(
+    "-d", "--distance",
+    "distance",
+    type=int,
+    default=5, show_default=True,
+    help="Distance to merge proximal integration sites",
+)
+@click.option(
+    "-m", "--mode",
+    "mode",
+    type=click.Choice(["median"], case_sensitive=False),
+    default="median", show_default=True,
+    help=(
+        "Mode for merging integration sites "
+        "(currently only median supported)"
+    ),
+)
+def merge_cmd(
+    infile: click.utils.LazyFile | TextIO,
+    outfile: click.utils.LazyFile | TextIO,
+    distance: Annotated[int, Ge(0), Le(100)] = 5,
+    mode: Literal["median"] = "median",
+) -> None:
+    """Merge proximal integration sites in a BED file."""
+    from isatoolkit2.bed.merge import merge_integration_sites
+    merge_integration_sites(
+        infile=infile,
+        outfile=outfile,
+        distance=distance,
+        mode=mode,
+    )
+
 # The sam subcommand group
 @click.group()
 def sam() -> None:

@@ -5,7 +5,7 @@ from enum import Enum
 from typing import Annotated
 
 from annotated_types import Ge, MinLen
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 def natural_key(string: str) -> list[str | int]:
@@ -30,6 +30,7 @@ class BedLine(BaseModel):
     score: Annotated[int, Ge(1)]
     strand: Strand
 
-    config = {
-        "use_enum_values": True,
-    }
+    model_config = ConfigDict(
+        use_enum_values = True
+    )
+    

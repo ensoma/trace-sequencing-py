@@ -9,6 +9,33 @@ from annotated_types import Ge, Le
 
 from isatoolkit2.bed.bed_utils import BedLine, Strand, natural_key
 
+MIN_BED_COLS = 6
+
+def read_lines(
+    infile: click.utils.LazyFile | TextIO,
+) -> list[BedLine]:
+    """Read lines from a BED file."""
+    lines = []
+    for line in infile:
+        # Skip empty lines or comment lines
+        stripped_line = line.strip()
+        if not stripped_line or stripped_line.startswith("#"):
+            continue
+
+        split_line = stripped_line.split("\t")
+        # Check if line has the expected format
+        if len(split_line) >= MIN_BED_COLS:
+            lines.append(
+                BedLine(
+                    seqname=str(split_line[0]),
+                    start=int(split_line[1]),
+                    end=int(split_line[2]),
+                    name=str(split_line[3]),
+                    score=int(split_line[4]),
+                    strand=Strand(split_line[5]),
+                ),
+            )
+    return lines
 
 def merge_integration_sites(
     infile: click.utils.LazyFile | TextIO,
@@ -26,36 +53,26 @@ def merge_integration_sites(
     # Read the input file and position sort.
     #   - The sorting is version/natural sorting of the chromosome and
     #     and numeric sorting of the start position.
-    lines = []
-    for line in infile:
-        split_line = line.strip().split("\t")
-        lines.append(
-            BedLine(
-                seqname=str(split_line[0]),
-                start=int(split_line[1]),
-                end=int(split_line[2]),
-                name=str(split_line[3]),
-                score=int(split_line[4]),
-                strand=Strand(split_line[5]),
-            ),
-        )
+    lines = read_lines(infile)
 
+    # Sort the lines by chromosome, strand, and then position
     lines.sort(
         key=lambda line: (
             natural_key(line.seqname),
+            line.strand,  # Use strand directly without natural_key
             int(line.start),
-            natural_key(line.strand),
         ),
     )
 
-    # Group by chromosome and strand.
-    grouped_lines = list(
-        groupby(lines, key=lambda line: (line.seqname, line.strand)),
-    )
+    # Group by chromosome and strand, but collect the groups into a dictionary
+    # to avoid iterator consumption issues
+    grouped_data = {}
+    for key, group in groupby(lines, key=lambda line: (line.seqname, line.strand)):
+        grouped_data[key] = list(group)  # Convert iterator to list to preserve items
 
     # Process each group.
-    for group in grouped_lines:
-        entries = deque(group[1]) # A deque of BedLine objects
+    for entries_list in grouped_data.values():
+        entries = deque(entries_list)  # A deque of BedLine objects
 
         # Iterate over all integration sites in the same chromosome and strand.
         while entries:
@@ -68,19 +85,25 @@ def merge_integration_sites(
             highest_entries = [current_entry] # List of highest scoring entries
             current_start = current_entry.start # Current start position
 
-            # Find all entries within distance
-            while entries:
-                next_entry = entries[0] # Peek at the next entry in the deque
+            # Find all entries within distance - implement proper chaining
+            i = 0
+            while i < len(entries):
+                next_entry = entries[i]
 
                 # Check if the next entry is within the specified distance
+                # from CURRENT position
+                # This is the key fix
+                #   - we compare with current_start which is updated for each match
                 if abs(next_entry.start - current_start) <= distance:
-                    entries.popleft() # Allow iteration to next item in inner while loop
+                    # Remove the entry from the queue and don't increment i
+                    entries.remove(next_entry)
                     proximal_entries.append(next_entry) # Add to proximal entries
                     total_score += next_entry.score # Update total score
-                    current_start = next_entry.start # Update current start position
+
+                    # Update current_start for chaining behavior - this is critical
+                    current_start = next_entry.start
 
                     # Update max score if proximal entry has a higher score
-                    # Reset the position of the highest scoring entries
                     if next_entry.score > max_score:
                         max_score = next_entry.score
                         highest_entries = [next_entry]
@@ -88,21 +111,27 @@ def merge_integration_sites(
                     # add position to highest scores
                     elif next_entry.score == max_score:
                         highest_entries.append(next_entry)
-                # If the next entry is not within distance, break the inner loop
                 else:
-                    break
+                    # Only increment i if we don't find a match,
+                    # since removing entries changes indices
+                    i += 1
 
             # Select the median entry
             positions = sorted(entry.start for entry in highest_entries)
             median_pos = positions[len(positions) // 2]
             median_entry = next(e for e in highest_entries if e.start == median_pos)
 
-            # Write the merged entry to the output file
-            outfile.write(
+            output_line = (
                 f"{median_entry.seqname}\t"
                 f"{median_pos}\t"
                 f"{median_pos}\t"
                 f"{median_entry.name}\t"
                 f"{total_score}\t"
-                f"{median_entry.strand}\n",
+                f"{median_entry.strand}\n"
             )
+
+            # Write the merged entry to the output file
+            outfile.write(output_line)
+
+    # Final flush to ensure all data is written
+    outfile.flush()
