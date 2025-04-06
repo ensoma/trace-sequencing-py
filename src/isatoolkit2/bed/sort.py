@@ -20,7 +20,7 @@ def sort_bed(
         lines.sort(key=lambda line: (
             natural_key(line.split("\t")[0]),
             int(line.split("\t")[1]),
-            natural_key(line.split("\t")[5]),
+            line.split("\t")[5],
         ))
     elif sort_by == "score":
         # Sort by score (fifth column) in descending order

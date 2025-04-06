@@ -44,3 +44,6 @@ ignore=[
 "src/isatoolkit2/sam/fiveprime_filter.py"=["PLR0913"]
 "src/isatoolkit2/utils.py"=["N805"]
 "src/isatoolkit2/main.py"=["PLR0913"]
+"tests/test_*.py"=[
+    "S101", "PT006"
+]
