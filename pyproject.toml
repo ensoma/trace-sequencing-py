@@ -14,7 +14,7 @@ dependencies = [
 ]
 
 [tool.poetry.scripts]
-isa-toolkit2 = "isatoolkit2.main:cli"
+isatoolkit2 = "isatoolkit2.main:cli"
 
 [tool.poetry]
 packages = [{include = "isatoolkit2", from = "src"}]
