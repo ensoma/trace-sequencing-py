@@ -168,3 +168,32 @@ def test_valid_score_sorting(
 
     # Assert that the output matches the expected output
     assert output_bed == expected_output
+
+@pytest.mark.parametrize(
+    "input_bed, error_type, error_msg",
+    [
+        # Missing last column
+        (
+            "chr1\t100\t100\t.\t1\n",
+            ValueError,
+            "Invalid BED line format.",
+        ),
+    ],
+    ids=[
+        "missing last column",
+    ],
+)
+def test_invalid_bed_file(
+    input_bed: str,
+    error_type: type[ValueError],
+    error_msg: str,
+) -> None:
+    """Test that the bed file is sorted correctly."""
+    # Create StringIO objects for the input and output.
+    input_bed_file = StringIO(input_bed)
+    output_bed_file = StringIO()
+
+    # Call the sort_bed function with the StringIO objects
+    # And capture the output
+    with pytest.raises(error_type, match=error_msg):
+        sort_bed(input_bed_file, output_bed_file)
