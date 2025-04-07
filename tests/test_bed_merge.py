@@ -10,7 +10,7 @@ from isatoolkit2.bed.merge import merge_integration_sites
 @pytest.mark.parametrize(
     "input_bed, expected_output",
     [
-        # No merging needed
+        # No merging needed - distance too far
         (
             (
                 "chr1\t100\t100\t.\t1\t+\n"
@@ -21,9 +21,102 @@ from isatoolkit2.bed.merge import merge_integration_sites
                 "chr1\t200\t200\t.\t1\t+\n"
             ),
         ),
+        # No merging needed - different chromosomes
+        (
+            (
+                "chr1\t100\t100\t.\t1\t+\n"
+                "chr2\t100\t100\t.\t1\t+\n"
+            ),
+            (
+                "chr1\t100\t100\t.\t1\t+\n"
+                "chr2\t100\t100\t.\t1\t+\n"
+            ),
+        ),
+        # No merging needed - different strands
+        (
+            (
+                "chr1\t100\t100\t.\t1\t+\n"
+                "chr1\t100\t100\t.\t1\t-\n"
+            ),
+            (
+                "chr1\t100\t100\t.\t1\t+\n"
+                "chr1\t100\t100\t.\t1\t-\n"
+            ),
+        ),
+        # Merge entries - distance of 1
+        (
+            (
+                "chr1\t100\t100\t.\t1\t+\n"
+                "chr1\t101\t101\t.\t2\t+\n"
+            ),
+            (
+                "chr1\t101\t101\t.\t3\t+\n"
+            ),
+        ),
+        # Merge entries - distance of 5
+        (
+            (
+                "chr1\t100\t100\t.\t1\t+\n"
+                "chr1\t105\t105\t.\t2\t+\n"
+            ),
+            (
+                "chr1\t105\t105\t.\t3\t+\n"
+            ),
+        ),
+        # Don't merge entries - distance of 6
+        (
+            (
+                "chr1\t100\t100\t.\t1\t+\n"
+                "chr1\t106\t106\t.\t1\t+\n"
+            ),
+            (
+                "chr1\t100\t100\t.\t1\t+\n"
+                "chr1\t106\t106\t.\t1\t+\n"
+            ),
+        ),
+        # Merge 3 entries
+        (
+            (
+                "chr1\t100\t100\t.\t1\t+\n"
+                "chr1\t101\t101\t.\t2\t+\n"
+                "chr1\t102\t102\t.\t3\t+\n"
+            ),
+            (
+                "chr1\t102\t102\t.\t6\t+\n"
+            ),
+        ),
+        # Merge two entries with median position
+        (
+            (
+                "chr1\t100\t100\t.\t1\t+\n"
+                "chr1\t102\t102\t.\t1\t+\n"
+            ),
+            (
+                "chr1\t101\t101\t.\t2\t+\n"
+            ),
+        ),
+        # Merge three entries with median position
+        (
+            (
+                "chr1\t100\t100\t.\t1\t+\n"
+                "chr1\t103\t103\t.\t1\t+\n"
+                "chr1\t104\t104\t.\t1\t+\n"
+            ),
+            (
+                "chr1\t103\t103\t.\t3\t+\n"
+            ),
+        ),
     ],
     ids=[
-        "no_merge",
+        "no merge, too far",
+        "no merge, different chromosome",
+        "no merge, different strand",
+        "merge, distance of 1",
+        "merge, distance of 5",
+        "no merge, distance of 6",
+        "merge 3 entries",
+        "merge, 2 entries median position",
+        "merge, 3 entries median position",
     ],
 )
 def test_merge_bed(

@@ -2,6 +2,7 @@
 
 from collections import deque
 from itertools import groupby
+from statistics import median
 from typing import Annotated, Literal, TextIO
 
 import click
@@ -118,8 +119,12 @@ def merge_integration_sites(
 
             # Select the median entry
             positions = sorted(entry.start for entry in highest_entries)
-            median_pos = positions[len(positions) // 2]
-            median_entry = next(e for e in highest_entries if e.start == median_pos)
+            median_pos = (
+                round(median(positions)) if len(positions) > 1
+                else positions[0]
+            )
+            median_entry = highest_entries[0]
+            median_entry.score = total_score
 
             output_line = (
                 f"{median_entry.seqname}\t"
