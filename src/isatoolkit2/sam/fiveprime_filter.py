@@ -75,7 +75,7 @@ def fiveprime_filter(
             # If the read is R1, check if there are too many softclipped bases.
             # Needs to be strand-aware.
             softclipped = softclipped_bases(read)
-            if softclipped and softclipped <= max_softclip:
+            if softclipped is not None and softclipped <= max_softclip:
                 outfile_handle.write(read)
                 continue
 
