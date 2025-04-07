@@ -3,26 +3,22 @@ from pathlib import Path
 import pysam
 from typing import Literal
 
+from isatoolkit2.bed.bed_utils import Strand
+
 @dataclass
 class ReadLine:
     """Dataclass to hold information about a read line"""
 
+    read_id: str
     seqname: None | str
-    start: int
-    end: int
-
-@dataclass
-class SamReadInfo:
-    """Dataclass to hold information about a SAM reads"""
-
-    row: list[ReadLine]
-
-def integration_site(
-    read: psyam.AlignedSegment,
-) -> tuple[int, int]:
-    """Get the integration site from a read"""
-    # Assuming the integration site is at the start of the R1 read.
-    
+    integration_site: None | int
+    strand: None | Strand
+    fragment_length: None | int
+    fiveprime_softclip: None | int
+    read_mapped: Literal[1, 0]
+    pair_mapped: Literal[1, 0]
+    supplemental_alignment: Literal[1, 0]
+    alternative_alignment: iteral[1, 0]
 
 def read_info(
     infile: Literal["-"] | Path,
