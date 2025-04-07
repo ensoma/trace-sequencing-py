@@ -23,7 +23,7 @@ The toolkit is available as a Docker container for easy deployment without worry
 
 ```bash
 # Pull the Docker image
-docker pull isatoolkit2:latest
+docker pull isatoolkit2:0.1.1
 
 # Run a command using the container
 docker run --rm -v $(pwd):/data isatoolkit2:latest sam mapping-filter -i /data/input.bam -o /data/output.bam -f bam
