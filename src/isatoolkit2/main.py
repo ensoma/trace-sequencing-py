@@ -259,7 +259,7 @@ def fiveprime_filter_cmd(
 )
 def count_cmd(
     infile: Literal["-"] | Path,
-    outfile: Literal["-"] | Path,
+    outfile: click.utils.LazyFile | TextIO,
 ) -> None:
     """Count integration sites in a SAM/BAM file."""
     from isatoolkit2.sam.count import count_integration_sites
