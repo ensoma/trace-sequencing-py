@@ -1,8 +1,11 @@
+"""Test the fiveprime_filter function."""
+
+from pathlib import Path
 
 import pytest
 
-from pathlib import Path
 from isatoolkit2.sam.fiveprime_filter import fiveprime_filter
+
 
 @pytest.mark.parametrize(
     "input_data, expected_output",
@@ -25,12 +28,12 @@ from isatoolkit2.sam.fiveprime_filter import fiveprime_filter
             (
                 "@HD\tVN:1.6\tSO:coordinate\n"
                 "@SQ\tSN:chr1\tLN:1000\n"
-                "read1\t128\tchr1\t100\t60\t10M\t*\t0\t0\t*\t*\n"
+                "read1\t80\tchr1\t100\t60\t10M\t*\t0\t0\t*\t*\n"
             ),
             (
                 "@HD\tVN:1.6\tSO:coordinate\n"
                 "@SQ\tSN:chr1\tLN:1000\n"
-                "read1\t128\tchr1\t100\t60\t10M\t*\t0\t0\t*\t*\n"
+                "read1\t80\tchr1\t100\t60\t10M\t*\t0\t0\t*\t*\n"
             ),
         ),
         # Single R1 read, + strand, filtering
@@ -109,7 +112,7 @@ def test_fiveprime_filter(
 
     # Run the fiveprime_filter function
     fiveprime_filter(
-        input_file, output_file, outfile_format="sam"
+        input_file, output_file, outfile_format="sam",
     )
 
     # Read the output file and check its contents

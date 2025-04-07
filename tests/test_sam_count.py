@@ -121,7 +121,7 @@ def test_sam_count(
     """Test the count_integration_sites function."""
     # Create a temporary file for the input SAM
     input_sam_path = tmp_path / "input.sam"
-    with input_sam_path.open('w') as f:
+    with input_sam_path.open("w") as f:
         f.write(input_sam)
 
     # Create a temporary file for the output
