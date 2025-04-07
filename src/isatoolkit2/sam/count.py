@@ -52,9 +52,12 @@ def count_integration_sites(
             # Get the 5' most position of the R1 read
             if read.is_reverse:
                 strand = "-"
+                # For reverse reads, the 5' end is the rightmost position (reference_end - 1)
+                # reference_end is one past the last aligned base
                 pos = read.reference_end - 1 if read.reference_end else None
             else:
                 strand = "+"
+                # For forward reads, the 5' end is the leftmost position (reference_start)
                 pos = read.reference_start if read.reference_start else None
 
             # Increment the count for this integration site
