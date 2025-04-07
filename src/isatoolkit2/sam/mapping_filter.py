@@ -33,8 +33,8 @@ def alt_sup_filtering(
     output_format: Literal["sam", "bam"],
     discarded_outfile: None | Path = None,
     *,
-    filter_alt: bool = False,
-    filter_sup: bool = False,
+    filter_alt: bool = True,
+    filter_sup: bool = True,
     uncompressed: bool = False,
 ) -> None:
     """Filter SAM/BAM file based on ALT and SUP filtering options."""
