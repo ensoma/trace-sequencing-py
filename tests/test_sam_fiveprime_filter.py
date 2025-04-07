@@ -12,12 +12,12 @@ from isatoolkit2.sam.fiveprime_filter import fiveprime_filter
             (
                 "@HD\tVN:1.6\tSO:coordinate\n"
                 "@SQ\tSN:chr1\tLN:1000\n"
-                "read1\t64\tchr1\t100\t60\t10M\t*\t0\t0\tAGCTTCCTAT\t*\n"
+                "read1\t64\tchr1\t100\t60\t10M\t*\t0\t0\t*\t*\n"
             ),
             (
                 "@HD\tVN:1.6\tSO:coordinate\n"
                 "@SQ\tSN:chr1\tLN:1000\n"
-                "read1\t64\tchr1\t100\t60\t10M\t*\t0\t0\tAGCTTCCTAT\t*\n"
+                "read1\t64\tchr1\t100\t60\t10M\t*\t0\t0\t*\t*\n"
             ),
         ),
         # Single R1 read, - strand, no filtering
@@ -25,18 +25,72 @@ from isatoolkit2.sam.fiveprime_filter import fiveprime_filter
             (
                 "@HD\tVN:1.6\tSO:coordinate\n"
                 "@SQ\tSN:chr1\tLN:1000\n"
-                "read2\t128\tchr1\t200\t60\t10M\t*\t0\t0\tAGCTTCCTAT\t*\n"
+                "read1\t128\tchr1\t100\t60\t10M\t*\t0\t0\t*\t*\n"
             ),
             (
                 "@HD\tVN:1.6\tSO:coordinate\n"
                 "@SQ\tSN:chr1\tLN:1000\n"
-                "read2\t128\tchr1\t200\t60\t10M\t*\t0\t0\tAGCTTCCTAT\t*\n"
+                "read1\t128\tchr1\t100\t60\t10M\t*\t0\t0\t*\t*\n"
+            ),
+        ),
+        # Single R1 read, + strand, filtering
+        (
+            (
+                "@HD\tVN:1.6\tSO:coordinate\n"
+                "@SQ\tSN:chr1\tLN:1000\n"
+                "read1\t64\tchr1\t100\t60\t6S4M\t*\t0\t0\t*\t*\n"
+            ),
+            (
+                "@HD\tVN:1.6\tSO:coordinate\n"
+                "@SQ\tSN:chr1\tLN:1000\n"
+            ),
+        ),
+        # Single R1 read, - strand, filtering
+        (
+            (
+                "@HD\tVN:1.6\tSO:coordinate\n"
+                "@SQ\tSN:chr1\tLN:1000\n"
+                "read1\t80\tchr1\t100\t60\t4M6S\t*\t0\t0\t*\t*\n"
+            ),
+            (
+                "@HD\tVN:1.6\tSO:coordinate\n"
+                "@SQ\tSN:chr1\tLN:1000\n"
+            ),
+        ),
+        # Single R2 read, + strand, no filtering
+        (
+            (
+                "@HD\tVN:1.6\tSO:coordinate\n"
+                "@SQ\tSN:chr1\tLN:1000\n"
+                "read1\t128\tchr1\t100\t60\t10M\t*\t0\t0\t*\t*\n"
+            ),
+            (
+                "@HD\tVN:1.6\tSO:coordinate\n"
+                "@SQ\tSN:chr1\tLN:1000\n"
+                "read1\t128\tchr1\t100\t60\t10M\t*\t0\t0\t*\t*\n"
+            ),
+        ),
+        # Single R2 read, - strand, no filtering
+        (
+            (
+                "@HD\tVN:1.6\tSO:coordinate\n"
+                "@SQ\tSN:chr1\tLN:1000\n"
+                "read1\t144\tchr1\t100\t60\t10M\t*\t0\t0\t*\t*\n"
+            ),
+            (
+                "@HD\tVN:1.6\tSO:coordinate\n"
+                "@SQ\tSN:chr1\tLN:1000\n"
+                "read1\t144\tchr1\t100\t60\t10M\t*\t0\t0\t*\t*\n"
             ),
         ),
     ],
     ids=[
         "Single R1 read, + strand, no filtering",
         "Single R1 read, - strand, no filtering",
+        "Single R1 read, + strand, filtering",
+        "Single R1 read, - strand, filtering",
+        "Single R2 read, + strand, no filtering",
+        "Single R2 read, - strand, no filtering",
     ],
 )
 def test_fiveprime_filter(
