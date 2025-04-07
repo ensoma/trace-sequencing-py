@@ -137,7 +137,41 @@ isatoolkit2 bed sort -i merged_sites.bed -o sorted_sites.bed -s score
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions to isatoolkit2 are welcome. Feel free to submit a pull request, while keeping the following in mind.
+
+### Development Setup
+
+1. **Install Poetry** if you don't have it already:
+   ```bash
+   curl -sSL https://install.python-poetry.org | python3 -
+   ```
+
+2. **Install Dependencies**:
+   ```bash
+   poetry install
+   ```
+
+### Checks
+
+Ensure the following checks pass.
+
+```bash
+# Unit tests
+poetry run pytest
+
+# Linting
+poetry run ruff check
+
+# Type checking
+poetry run pyright
+```
+
+### Documentation
+
+If you're adding new features, please update the documentation accordingly, including:
+- Docstrings for new functions or classes
+- Updates to the README.md if necessary
+- Comments explaining complex code sections
 
 ## License
 
