@@ -62,5 +62,4 @@ def test_fiveprime_filter(
     with output_file.open() as f:
         output_data = f.read()
 
-    print(output_data)
     assert output_data == expected_output
