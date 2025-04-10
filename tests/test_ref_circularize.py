@@ -1,11 +1,14 @@
+"""Test circularization of integration vector."""
+
+from io import StringIO
 
 import pytest
 
-from io import StringIO
 from isatoolkit2.ref.circularize import circularize_integration_vector
 
+
 @pytest.mark.parametrize(
-    "input, expected_output, frt_seq, allowed_errors",
+    "infile, expected_output, frt_seq, allowed_errors",
     [
         # 2 matches, forward orientation
         (
@@ -28,31 +31,31 @@ from isatoolkit2.ref.circularize import circularize_integration_vector
     ],
 )
 def test_valid_circularization(
-    input: str,
+    infile: str,
     expected_output: str,
     frt_seq: str,
     allowed_errors: int,
 ) -> None:
     """Test circularization of integration vector."""
     # Prepare the input handle
-    infile = StringIO(input)
-    outfile = StringIO()
+    input_file = StringIO(infile)
+    output_file = StringIO()
 
     # Call the function to test
     circularize_integration_vector(
-        infile=infile,
-        outfile=outfile,
+        infile=input_file,
+        outfile=output_file,
         frt_sequence=frt_seq,
         allowed_errors=allowed_errors,
     )
 
     # Check if the output is as expected
-    observed_output = outfile.getvalue()
+    observed_output = output_file.getvalue()
 
     assert observed_output == expected_output
 
 @pytest.mark.parametrize(
-    "input, expected_error, frt_seq, allowed_errors",
+    "infile, expected_error, frt_seq, allowed_errors",
     [
         # No matches
         (
@@ -107,21 +110,21 @@ def test_valid_circularization(
     ],
 )
 def test_invalid_circularization(
-    input: str,
+    infile: str,
     expected_error: str,
     frt_seq: str,
     allowed_errors: int,
 ) -> None:
     """Test circularization of integration vector with invalid cases."""
     # Prepare the input handle
-    infile = StringIO(input)
-    outfile = StringIO()
+    input_file = StringIO(infile)
+    output_file = StringIO()
 
     # Check if the ValueError is raised
     with pytest.raises(ValueError, match=expected_error):
         circularize_integration_vector(
-            infile=infile,
-            outfile=outfile,
+            infile=input_file,
+            outfile=output_file,
             frt_sequence=frt_seq,
             allowed_errors=allowed_errors,
         )
