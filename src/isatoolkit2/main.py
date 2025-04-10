@@ -6,12 +6,64 @@ from typing import Annotated, Literal, TextIO
 import click
 from annotated_types import Ge, Le
 
-from isatoolkit2.utils import SamBamInputType, SamBamOutputType
+from isatoolkit2.utils import FastaInputType, SamBamInputType, SamBamOutputType
 
 # Custom click types
 SAMBAM_INPUT = SamBamInputType()
 SAMBAM_OUTPUT = SamBamOutputType()
 DISCARDED_SAMBAM_OUTPUT = SamBamOutputType()
+FASTA_INPUT = FastaInputType()
+FASTA_OUTPUT = FastaInputType()
+
+# The ref subcommand group
+@click.group()
+def ref() -> None:
+    """Initialize reference file CLI."""
+
+@ref.command("circularize")
+@click.option(
+    "-i", "--infile",
+    "infile",
+    type=FASTA_INPUT,
+    default="-", show_default=True,
+    help="Input reference file or stdin (use '-' for stdin)",
+)
+@click.option(
+    "-o", "--outfile",
+    "outfile",
+    type=FASTA_OUTPUT,
+    default="-", show_default=True,
+    help="Output reference file or stdout (use '-' for stdout)",
+)
+@click.option(
+    "-f", "--frt-sequence",
+    "frt_sequence",
+    type=str,
+    default="GAAGTTCCTATTCCGAAGTTCCTATTCTCTAGAAAGTATAGGAACTTC",
+    show_default=True,
+    help="FRT sequence to add to the reference",
+)
+@click.option(
+    "-e", "--allowed-errors",
+    "allowed_errors",
+    type=int,
+    default=0, show_default=True,
+    help="Allowed errors in the FRT sequence",
+)
+def circularize_cmd(
+    infile: Literal["-"] | Path,
+    outfile: Literal["-"] | Path,
+    frt_sequence: str = "GAAGTTCCTATTCCGAAGTTCCTATTCTCTAGAAAGTATAGGAACTTC",
+    allowed_errors: Annotated[int, Ge(0), Le(10)] = 0,
+) -> None:
+    """Circularize a reference FASTA file."""
+    from isatoolkit2.ref.circularize import circularize_integration_vector
+    circularize_integration_vector(
+        infile=infile,
+        outfile=outfile,
+        frt_sequence=frt_sequence,
+        allowed_errors=allowed_errors,
+    )
 
 # The bed subcommand group
 @click.group()
@@ -276,6 +328,7 @@ def cli() -> None:
 # Add the subcommands to the main CLI group
 cli.add_command(sam)
 cli.add_command(bed)
+cli.add_command(ref)
 
 if __name__ == "__main__":
     # Run the CLI
