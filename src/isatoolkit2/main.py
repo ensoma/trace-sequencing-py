@@ -6,14 +6,12 @@ from typing import Annotated, Literal, TextIO
 import click
 from annotated_types import Ge, Le
 
-from isatoolkit2.utils import FastaInputType, SamBamInputType, SamBamOutputType
+from isatoolkit2.utils import SamBamInputType, SamBamOutputType
 
 # Custom click types
 SAMBAM_INPUT = SamBamInputType()
 SAMBAM_OUTPUT = SamBamOutputType()
 DISCARDED_SAMBAM_OUTPUT = SamBamOutputType()
-FASTA_INPUT = FastaInputType()
-FASTA_OUTPUT = FastaInputType()
 
 # The ref subcommand group
 @click.group()
@@ -24,14 +22,14 @@ def ref() -> None:
 @click.option(
     "-i", "--infile",
     "infile",
-    type=FASTA_INPUT,
+    type=click.File("r"),
     default="-", show_default=True,
     help="Input reference file or stdin (use '-' for stdin)",
 )
 @click.option(
     "-o", "--outfile",
     "outfile",
-    type=FASTA_OUTPUT,
+    type=click.File("w"),
     default="-", show_default=True,
     help="Output reference file or stdout (use '-' for stdout)",
 )
@@ -51,8 +49,8 @@ def ref() -> None:
     help="Allowed errors in the FRT sequence",
 )
 def circularize_cmd(
-    infile: Literal["-"] | Path,
-    outfile: Literal["-"] | Path,
+    infile: click.utils.LazyFile | TextIO,
+    outfile: click.utils.LazyFile | TextIO,
     frt_sequence: str = "GAAGTTCCTATTCCGAAGTTCCTATTCTCTAGAAAGTATAGGAACTTC",
     allowed_errors: Annotated[int, Ge(0), Le(10)] = 0,
 ) -> None:

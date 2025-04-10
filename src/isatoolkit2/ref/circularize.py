@@ -1,15 +1,14 @@
 """Circularize integration vector around the FRT site."""
 
-from contextlib import ExitStack
 from pathlib import Path
-from sys import stdin, stdout
 from typing import Annotated, Literal, TextIO
 
+import click
 import regex
 from annotated_types import Ge, Le, MinLen
 from Bio import SeqIO
-from Bio.SeqRecord import SeqRecord
 from Bio.Seq import Seq
+from Bio.SeqRecord import SeqRecord
 from pydantic import Field
 
 EXPECTED_FRT_SITES = 2
@@ -94,8 +93,8 @@ def check_orientation(
     return "forward" if len(forward_matches) == EXPECTED_FRT_SITES else "revcomp"
 
 def circularize_integration_vector(
-    infile: Literal["-"] | Path | TextIO,
-    outfile: Literal["-"] | Path | TextIO,
+    infile: click.utils.LazyFile | TextIO,
+    outfile: click.utils.LazyFile | TextIO,
     frt_sequence: Annotated[
         str,
         MinLen(5),
@@ -104,65 +103,54 @@ def circularize_integration_vector(
     allowed_errors: Annotated[int, Ge(0), Le(5)] = 0,
 ) -> None:
     """Circularize a sequence around the FRT site."""
-    with ExitStack() as stack:
-        # Prepare the input handle
-        if infile == "-":
-            input_stream = stdin
-        elif isinstance(infile, TextIO):
-            input_stream = infile
-        else:
-            input_stream = stack.enter_context(
-                infile.open("r"),
+    # Prepare the input handle
+    infile_handle = SeqIO.parse(infile, "fasta")
+
+    # Retrieve the records in the input file
+    fasta_records = list(infile_handle)
+
+    if len(fasta_records) != 1:
+        error_msg = "Input file must contain exactly one FASTA record."
+        raise ValueError(error_msg)
+
+    seq_id = fasta_records[0].id
+    seq = str(fasta_records[0].seq).upper()
+
+    # Find the FRT sites
+    left_match, right_match, orientation = find_frt_sites(
+        seq,
+        frt_sequence.upper(),
+        allowed_errors,
+    )
+
+    # extract the internal sequence.
+    # Then split the sequence into two parts.
+    internal_seq = seq[left_match.end():right_match.start()]
+
+    midpoint = len(internal_seq) // 2
+    left_half = internal_seq[:midpoint]
+    right_half = internal_seq[midpoint:]
+
+    # Create the new sequence
+    circularized_seq = right_half + left_match.group() + left_half
+
+    # Create the new record and write it to the output file
+    circularized_record = SeqRecord(
+        Seq(circularized_seq),
+        id=f"{seq_id}_circularized",
+        description=f"FRT_site_orientation: {orientation}",
+    )
+
+    if isinstance(outfile, click.utils.LazyFile):
+        with Path(outfile.name).open("w") as handle:
+            SeqIO.write(
+                circularized_record,
+                handle,
+                "fasta",
             )
-
-        infile_handle = SeqIO.parse(input_stream, "fasta")
-
-        # Prepare the output handle
-        if outfile == "-":
-            output_stream = stdout
-        elif isinstance(outfile, TextIO):
-            output_stream = outfile
-        else:
-            output_stream = stack.enter_context(
-                outfile.open("w"),
-            )
-
-        # Retrieve the records in the input file
-        fasta_records = list(infile_handle)
-
-        if len(fasta_records) != 1:
-            error_msg = "Input file must contain exactly one FASTA record."
-            raise ValueError(error_msg)
-
-        seq_id = fasta_records[0].id
-        seq = str(fasta_records[0].seq).upper()
-
-        # Find the FRT sites
-        left_match, right_match, orientation = find_frt_sites(
-            seq,
-            frt_sequence.upper(),
-            allowed_errors,
-        )
-
-        # extract the internal sequence.
-        # Then split the sequence into two parts.
-        internal_seq = seq[left_match.end():right_match.start()]
-
-        midpoint = len(internal_seq) // 2
-        left_half = internal_seq[:midpoint]
-        right_half = internal_seq[midpoint:]
-
-        # Create the new sequence
-        circularized_seq = right_half + left_match.group() + left_half
-
-        # Create the new record and write it to the output file
-        circularized_record = SeqRecord(
-            Seq(circularized_seq),
-            id=f"{seq_id}_circularized",
-        )
-
+    else:
         SeqIO.write(
             circularized_record,
-            output_stream,
+            outfile,
             "fasta",
         )
