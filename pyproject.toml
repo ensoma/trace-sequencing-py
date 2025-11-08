@@ -1,0 +1,54 @@
+[project]
+authors = [{name = "rpolicastro", email = "31133814+rpolicastro@users.noreply.github.com"}]
+dependencies = []
+name = "isatoolkit2"
+requires-python = ">= 3.12"
+version = "0.2.0"
+
+[build-system]
+build-backend = "hatchling.build"
+requires = ["hatchling"]
+
+[project.scripts]
+trace = "isatoolkit2.main:cli"
+
+[tool.ruff]
+target-version = "py312"
+
+[tool.ruff.lint]
+select=["ALL"]
+ignore=[
+    "D211",
+    "D212",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"src/isatoolkit2/sam/mapping_filter.py"=["PLR0913"]
+"src/isatoolkit2/sam/fiveprime_filter.py"=["PLR0913"]
+"src/isatoolkit2/utils.py"=["N805"]
+"src/isatoolkit2/main.py"=["PLR0913"]
+"tests/test_*.py"=[
+    "S101", "PT006"
+]
+
+[tool.pixi.workspace]
+channels = ["conda-forge", "bioconda"]
+platforms = ["linux-64"]
+
+[tool.pixi.pypi-dependencies]
+isatoolkit2 = { path = ".", editable = true }
+
+[tool.pixi.tasks]
+
+[tool.pixi.dependencies]
+pydantic = "2.11.*"
+pysam = "0.23.*"
+click = "8.1.*"
+
+[tool.pixi.feature.dev.dependencies]
+ruff = "0.11.*"
+pytest = "8.3.*"
+pyright = "1.1.*"
+
+[tool.pixi.environments]
+dev = ["dev"]
