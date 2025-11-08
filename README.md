@@ -27,7 +27,7 @@ docker run \
    -v $(pwd):/workdir \
    -w /workdir \
    isatoolkit2:0.2.0 \
-   isatoolkit2 sam mapping-filter \
+   pixi run --manifest-path /app/pyproject.toml trace sam mapping-filter \
       -i /data/input.bam \
       -o /data/output.bam \
       -f bam
