@@ -50,11 +50,11 @@ pixi run trace bed merge -i sites.bed -o merged.bed -d 5
 ### Docker
 ```bash
 # Build Docker image
-docker build -t isatoolkit2:0.2.1 .
+docker build -t trace:0.2.2 .
 
 # Run via Docker
 docker run \
-  --rm -v $(pwd):/workdir -w /workdir isatoolkit:0.2.1 \
+  --rm -v $(pwd):/workdir -w /workdir trace:0.2.2 \
   pixi run --manifest-path /app/pyproject.toml trace sam mapping-filter \
   -i input.bam -o output.bam -f bam
 ```

@@ -3,7 +3,7 @@ authors = [{name = "rpolicastro", email = "31133814+rpolicastro@users.noreply.gi
 dependencies = []
 name = "isatoolkit2"
 requires-python = ">= 3.12"
-version = "0.2.1"
+version = "0.2.2"
 
 [build-system]
 build-backend = "hatchling.build"
