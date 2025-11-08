@@ -241,8 +241,8 @@ packages:
   timestamp: 1760831448842
 - pypi: ./
   name: isatoolkit2
-  version: 0.2.0
-  sha256: 78b8f129ae81f4731174e5e7fb902e4408ca7d921903c2a63e90164592a1c69c
+  version: 0.2.1
+  sha256: 398851023e18a670e19c57fb76767784bded993a53a5ebea2803c702a4e25204
   requires_python: '>=3.12'
   editable: true
 - conda: https://conda.anaconda.org/conda-forge/linux-64/keyutils-1.6.3-hb9d3cd8_0.conda
