@@ -22,27 +22,34 @@ Integration site analysis involves discovering the locations where transposons h
 The toolkit is available as a Docker container for easy deployment without worrying about dependencies.
 
 ```bash
-# Pull the Docker image
-docker pull isatoolkit2:0.1.1
-
-# Run a command using the container
-docker run --rm -v $(pwd):/data isatoolkit2:latest sam mapping-filter -i /data/input.bam -o /data/output.bam -f bam
+docker run \
+   --rm \
+   -v $(pwd):/workdir \
+   -w /workdir \
+   isatoolkit2:0.2.0 \
+   isatoolkit2 sam mapping-filter \
+      -i /data/input.bam \
+      -o /data/output.bam \
+      -f bam
 ```
 
-### Option 2: Local Installation with Poetry
+### Option 2: Local Installation with Pixi
 
 For development purposes or if you prefer to run the toolkit locally:
 
 ```bash
 # Clone the repository
-git clone https://github.com/ensoma/ensoma-trace-toolkit2.git
-cd isatoolkit2
+git clone https://github.com/ensoma/trace-sequencing-py.git
+cd trace-sequencing-py
 
-# Install dependencies using Poetry
-poetry install
+# Install dependencies
+pixi install
 
 # Run the toolkit
-poetry run python -m isatoolkit2.main sam mapping-filter -i input.bam -o output.bam -f bam
+pixi run trace sam mapping-filter \
+   -i input.bam \
+   -o output.bam \
+   -f bam
 ```
 
 ## Commands
@@ -120,19 +127,19 @@ Merge proximal integration sites in a BED file.
 
 ```bash
 # Filter a BAM file to remove reads with alternative alignments and supplementary alignments
-isatoolkit2 sam mapping-filter -i input.bam -o filtered.bam -f bam
+trace sam mapping-filter -i input.bam -o filtered.bam -f bam
 
 # Filter reads based on 5' softclipping
-isatoolkit2 sam fiveprime-filter -i filtered.bam -o filtered_5p.bam -f bam -m 5
+trace sam fiveprime-filter -i filtered.bam -o filtered_5p.bam -f bam -m 5
 
 # Count integration sites and output to BED format
-isatoolkit2 sam count -i filtered_5p.bam -o sites.bed
+trace sam count -i filtered_5p.bam -o sites.bed
 
 # Merge proximal integration sites
-isatoolkit2 bed merge -i sites.bed -o merged_sites.bed -d 5
+trace bed merge -i sites.bed -o merged_sites.bed -d 5
 
 # Sort the merged sites by score
-isatoolkit2 bed sort -i merged_sites.bed -o sorted_sites.bed -s score
+trace bed sort -i merged_sites.bed -o sorted_sites.bed -s score
 ```
 
 ## Contributing
@@ -141,14 +148,11 @@ Contributions to isatoolkit2 are welcome. Feel free to submit a pull request, wh
 
 ### Development Setup
 
-1. **Install Poetry** if you don't have it already:
-   ```bash
-   curl -sSL https://install.python-poetry.org | python3 -
-   ```
+1. **Install Pixi** if you don't have it already.
 
 2. **Install Dependencies**:
    ```bash
-   poetry install
+   pixi install -e dev
    ```
 
 ### Checks
@@ -157,13 +161,13 @@ Ensure the following checks pass.
 
 ```bash
 # Unit tests
-poetry run pytest
+pixi run -e dev pytest
 
 # Linting
-poetry run ruff check
+pixi run -e dev ruff check
 
 # Type checking
-poetry run pyright
+pixi run -e dev pyright
 ```
 
 ### Documentation

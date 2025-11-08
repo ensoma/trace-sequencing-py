@@ -27,6 +27,7 @@ class AltSupCounts:
             f"ALT or SUP: {self.alt_or_sup}\n"
         )
 
+
 def alt_sup_filtering(
     infile: Literal["-"] | Path,
     outfile: Literal["-"] | Path,
@@ -40,7 +41,8 @@ def alt_sup_filtering(
     """Filter SAM/BAM file based on ALT and SUP filtering options."""
     # Set the output mode based on the output format and compression options
     output_mode = get_output_mode(
-        output_format, uncompressed=uncompressed,
+        output_format,
+        uncompressed=uncompressed,
     )
 
     # Open the input and output files
@@ -61,7 +63,8 @@ def alt_sup_filtering(
                     template=infile_handle,
                 ),
             )
-            if discarded_outfile is not None else None
+            if discarded_outfile is not None
+            else None
         )
 
         # Iterate over each read in the input file

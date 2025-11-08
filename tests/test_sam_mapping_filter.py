@@ -6,120 +6,70 @@ import pytest
 
 from isatoolkit2.sam.mapping_filter import alt_sup_filtering
 
-SAM_HEADER = (
-    "@HD\tVN:1.6\tSO:coordinate\n"
-    "@SQ\tSN:chr1\tLN:1000\n"
-)
+SAM_HEADER = "@HD\tVN:1.6\tSO:coordinate\n@SQ\tSN:chr1\tLN:1000\n"
+
 
 @pytest.mark.parametrize(
     "input_data, expected_output",
     [
         # Single R1 read, + strand, no filtering
         (
-            (
-                f"{SAM_HEADER}"
-                "read1\t64\tchr1\t100\t60\t5M\t*\t0\t0\t*\t*\n"
-            ),
-            (
-                f"{SAM_HEADER}"
-                "read1\t64\tchr1\t100\t60\t5M\t*\t0\t0\t*\t*\n"
-            ),
+            (f"{SAM_HEADER}read1\t64\tchr1\t100\t60\t5M\t*\t0\t0\t*\t*\n"),
+            (f"{SAM_HEADER}read1\t64\tchr1\t100\t60\t5M\t*\t0\t0\t*\t*\n"),
         ),
         # Single R2 read, + strand, no filtering
         (
-            (
-                f"{SAM_HEADER}"
-                "read1\t128\tchr1\t100\t60\t5M\t*\t0\t0\t*\t*\n"
-            ),
-            (
-                f"{SAM_HEADER}"
-                "read1\t128\tchr1\t100\t60\t5M\t*\t0\t0\t*\t*\n"
-            ),
+            (f"{SAM_HEADER}read1\t128\tchr1\t100\t60\t5M\t*\t0\t0\t*\t*\n"),
+            (f"{SAM_HEADER}read1\t128\tchr1\t100\t60\t5M\t*\t0\t0\t*\t*\n"),
         ),
         # Single R1 read, - strand, no filtering
         (
-            (
-                f"{SAM_HEADER}"
-                "read1\t80\tchr1\t100\t60\t5M\t*\t0\t0\t*\t*\n"
-            ),
-            (
-                f"{SAM_HEADER}"
-                "read1\t80\tchr1\t100\t60\t5M\t*\t0\t0\t*\t*\n"
-            ),
+            (f"{SAM_HEADER}read1\t80\tchr1\t100\t60\t5M\t*\t0\t0\t*\t*\n"),
+            (f"{SAM_HEADER}read1\t80\tchr1\t100\t60\t5M\t*\t0\t0\t*\t*\n"),
         ),
         # Single R2 read, - strand, no filtering
         (
-            (
-                f"{SAM_HEADER}"
-                "read1\t144\tchr1\t100\t60\t5M\t*\t0\t0\t*\t*\n"
-            ),
-            (
-                f"{SAM_HEADER}"
-                "read1\t144\tchr1\t100\t60\t5M\t*\t0\t0\t*\t*\n"
-            ),
+            (f"{SAM_HEADER}read1\t144\tchr1\t100\t60\t5M\t*\t0\t0\t*\t*\n"),
+            (f"{SAM_HEADER}read1\t144\tchr1\t100\t60\t5M\t*\t0\t0\t*\t*\n"),
         ),
         # Single R1 read, + strand, filter supplemental
         (
-            (
-                f"{SAM_HEADER}"
-                "read1\t64\tchr1\t100\t60\t5M\t*\t0\t0\t*\t*\tSA:Z:*\n"
-            ),
+            (f"{SAM_HEADER}read1\t64\tchr1\t100\t60\t5M\t*\t0\t0\t*\t*\tSA:Z:*\n"),
             SAM_HEADER,
         ),
         # Single R2 read, + strand, filter supplemental
         (
-            (
-                f"{SAM_HEADER}"
-                "read1\t128\tchr1\t100\t60\t5M\t*\t0\t0\t*\t*\tSA:Z:*\n"
-            ),
+            (f"{SAM_HEADER}read1\t128\tchr1\t100\t60\t5M\t*\t0\t0\t*\t*\tSA:Z:*\n"),
             SAM_HEADER,
         ),
         # Single R1 read, - strand, filter supplemental
         (
-            (
-                f"{SAM_HEADER}"
-                "read1\t80\tchr1\t100\t60\t5M\t*\t0\t0\t*\t*\tSA:Z:*\n"
-            ),
+            (f"{SAM_HEADER}read1\t80\tchr1\t100\t60\t5M\t*\t0\t0\t*\t*\tSA:Z:*\n"),
             SAM_HEADER,
         ),
         # Single R2 read, - strand, filter supplemental
         (
-            (
-                f"{SAM_HEADER}"
-                "read1\t144\tchr1\t100\t60\t5M\t*\t0\t0\t*\t*\tSA:Z:*\n"
-            ),
+            (f"{SAM_HEADER}read1\t144\tchr1\t100\t60\t5M\t*\t0\t0\t*\t*\tSA:Z:*\n"),
             SAM_HEADER,
         ),
         # Single R1 read, + strand, filter alternate
         (
-            (
-                f"{SAM_HEADER}"
-                "read1\t64\tchr1\t100\t60\t5M\t*\t0\t0\t*\t*\tXA:Z:*\n"
-            ),
+            (f"{SAM_HEADER}read1\t64\tchr1\t100\t60\t5M\t*\t0\t0\t*\t*\tXA:Z:*\n"),
             SAM_HEADER,
         ),
         # Single R2 read, + strand, filter alternate
         (
-            (
-                f"{SAM_HEADER}"
-                "read1\t128\tchr1\t100\t60\t5M\t*\t0\t0\t*\t*\tXA:Z:*\n"
-            ),
+            (f"{SAM_HEADER}read1\t128\tchr1\t100\t60\t5M\t*\t0\t0\t*\t*\tXA:Z:*\n"),
             SAM_HEADER,
         ),
         # Single R1 read, - strand, filter alternate
         (
-            (
-                f"{SAM_HEADER}"
-                "read1\t80\tchr1\t100\t60\t5M\t*\t0\t0\t*\t*\tXA:Z:*\n"
-            ),
+            (f"{SAM_HEADER}read1\t80\tchr1\t100\t60\t5M\t*\t0\t0\t*\t*\tXA:Z:*\n"),
             SAM_HEADER,
         ),
         # Single R2 read, - strand, filter alternate
         (
-            (
-                f"{SAM_HEADER}"
-                "read1\t144\tchr1\t100\t60\t5M\t*\t0\t0\t*\t*\tXA:Z:*\n"
-            ),
+            (f"{SAM_HEADER}read1\t144\tchr1\t100\t60\t5M\t*\t0\t0\t*\t*\tXA:Z:*\n"),
             SAM_HEADER,
         ),
         # Single R1 read, + strand, filter alternate and supplemental
@@ -190,7 +140,9 @@ def test_alt_sup_filtering(
 
     # Run the fiveprime_filter function
     alt_sup_filtering(
-        input_file, output_file, output_format="sam",
+        input_file,
+        output_file,
+        output_format="sam",
     )
 
     # Read the output file and check its contents

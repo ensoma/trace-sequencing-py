@@ -57,8 +57,7 @@ from isatoolkit2.sam.count import count_integration_sites
                 "read1\t64\tchr1\t100\t60\t5M\t*\t0\t0\tAGCTT\t*\n"
                 "read2\t80\tchr1\t100\t60\t5M\t*\t0\t0\tAGCTT\t*\n"
             ),
-            "chr1\t99\t99\t.\t1\t+\n"
-            "chr1\t103\t103\t.\t1\t-\n",
+            "chr1\t99\t99\t.\t1\t+\nchr1\t103\t103\t.\t1\t-\n",
         ),
         # 2x R1 reads, same position, different chromosomes
         (
@@ -69,8 +68,7 @@ from isatoolkit2.sam.count import count_integration_sites
                 "read1\t64\tchr1\t100\t60\t5M\t*\t0\t0\tAGCTT\t*\n"
                 "read2\t64\tchr2\t100\t60\t5M\t*\t0\t0\tAGCTT\t*\n"
             ),
-            "chr1\t99\t99\t.\t1\t+\n"
-            "chr2\t99\t99\t.\t1\t+\n",
+            "chr1\t99\t99\t.\t1\t+\nchr2\t99\t99\t.\t1\t+\n",
         ),
         # 1x R2 read, + strand
         (

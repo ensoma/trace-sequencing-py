@@ -13,10 +13,9 @@ def natural_key(string: str) -> list[str | int]:
     # Split the string into alternating non-digit and digit parts,
     # adn filter out empty strings.
     return [
-        int(s) if s.isdigit()
-        else s.lower() for s in re.split(r"(\d+)", string)
-        if s
+        int(s) if s.isdigit() else s.lower() for s in re.split(r"(\d+)", string) if s
     ]
+
 
 class Strand(Enum):
 
@@ -24,6 +23,7 @@ class Strand(Enum):
 
     PLUS = "+"
     MINUS = "-"
+
 
 class BedLine(BaseModel):
 
@@ -37,5 +37,5 @@ class BedLine(BaseModel):
     strand: Strand
 
     model_config = ConfigDict(
-        use_enum_values = True,
+        use_enum_values=True,
     )

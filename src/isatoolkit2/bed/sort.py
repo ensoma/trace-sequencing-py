@@ -34,11 +34,13 @@ def sort_bed(
 
     if sort_by == "position":
         # Sort by chromosome (natural sort) and start position (numeric)
-        lines.sort(key=lambda line: (
-            natural_key(line.seqname),
-            line.start,
-            line.strand,
-        ))
+        lines.sort(
+            key=lambda line: (
+                natural_key(line.seqname),
+                line.start,
+                line.strand,
+            ),
+        )
     elif sort_by == "score":
         # Sort by score (fifth column) in descending order
         lines.sort(key=lambda line: line.score, reverse=True)

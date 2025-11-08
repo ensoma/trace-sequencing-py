@@ -12,47 +12,23 @@ from isatoolkit2.bed.sort import sort_bed
     [
         # No sorting
         (
-            (
-                "chr1\t100\t100\t.\t1\t+\n"
-                "chr1\t101\t101\t.\t1\t+\n"
-            ),
-            (
-                "chr1\t100\t100\t.\t1\t+\n"
-                "chr1\t101\t101\t.\t1\t+\n"
-            ),
+            ("chr1\t100\t100\t.\t1\t+\nchr1\t101\t101\t.\t1\t+\n"),
+            ("chr1\t100\t100\t.\t1\t+\nchr1\t101\t101\t.\t1\t+\n"),
         ),
         # Position sorting only
         (
-            (
-                "chr1\t101\t101\t.\t1\t+\n"
-                "chr1\t100\t100\t.\t1\t+\n"
-            ),
-            (
-                "chr1\t100\t100\t.\t1\t+\n"
-                "chr1\t101\t101\t.\t1\t+\n"
-            ),
+            ("chr1\t101\t101\t.\t1\t+\nchr1\t100\t100\t.\t1\t+\n"),
+            ("chr1\t100\t100\t.\t1\t+\nchr1\t101\t101\t.\t1\t+\n"),
         ),
         # Chromosome sorting only
         (
-            (
-                "chr2\t100\t100\t.\t1\t+\n"
-                "chr1\t100\t100\t.\t1\t+\n"
-            ),
-            (
-                "chr1\t100\t100\t.\t1\t+\n"
-                "chr2\t100\t100\t.\t1\t+\n"
-            ),
+            ("chr2\t100\t100\t.\t1\t+\nchr1\t100\t100\t.\t1\t+\n"),
+            ("chr1\t100\t100\t.\t1\t+\nchr2\t100\t100\t.\t1\t+\n"),
         ),
         # Strand sorting only
         (
-            (
-                "chr1\t100\t100\t.\t1\t-\n"
-                "chr1\t100\t100\t.\t1\t+\n"
-            ),
-            (
-                "chr1\t100\t100\t.\t1\t+\n"
-                "chr1\t100\t100\t.\t1\t-\n"
-            ),
+            ("chr1\t100\t100\t.\t1\t-\nchr1\t100\t100\t.\t1\t+\n"),
+            ("chr1\t100\t100\t.\t1\t+\nchr1\t100\t100\t.\t1\t-\n"),
         ),
         # Chromosome, position, and strand sorting
         (
@@ -97,52 +73,29 @@ def test_valid_position_sorting(
     # Assert that the output matches the expected output
     assert output_bed == expected_output
 
+
 @pytest.mark.parametrize(
     "input_bed, expected_output",
     [
         # No sorting
         (
-            (
-                "chr1\t100\t100\t.\t1\t+\n"
-                "chr1\t101\t101\t.\t1\t+\n"
-            ),
-            (
-                "chr1\t100\t100\t.\t1\t+\n"
-                "chr1\t101\t101\t.\t1\t+\n"
-            ),
+            ("chr1\t100\t100\t.\t1\t+\nchr1\t101\t101\t.\t1\t+\n"),
+            ("chr1\t100\t100\t.\t1\t+\nchr1\t101\t101\t.\t1\t+\n"),
         ),
         # Score sorting same chromosome
         (
-            (
-                "chr1\t101\t101\t.\t1\t+\n"
-                "chr1\t100\t100\t.\t2\t+\n"
-            ),
-            (
-                "chr1\t100\t100\t.\t2\t+\n"
-                "chr1\t101\t101\t.\t1\t+\n"
-            ),
+            ("chr1\t101\t101\t.\t1\t+\nchr1\t100\t100\t.\t2\t+\n"),
+            ("chr1\t100\t100\t.\t2\t+\nchr1\t101\t101\t.\t1\t+\n"),
         ),
         # Score sorting different chromosomes same position
         (
-            (
-                "chr1\t100\t100\t.\t1\t+\n"
-                "chr2\t100\t100\t.\t2\t+\n"
-            ),
-            (
-                "chr2\t100\t100\t.\t2\t+\n"
-                "chr1\t100\t100\t.\t1\t+\n"
-            ),
+            ("chr1\t100\t100\t.\t1\t+\nchr2\t100\t100\t.\t2\t+\n"),
+            ("chr2\t100\t100\t.\t2\t+\nchr1\t100\t100\t.\t1\t+\n"),
         ),
         # Score sorting different chromosomes different position
         (
-            (
-                "chr1\t100\t100\t.\t1\t+\n"
-                "chr2\t101\t101\t.\t2\t+\n"
-            ),
-            (
-                "chr2\t101\t101\t.\t2\t+\n"
-                "chr1\t100\t100\t.\t1\t+\n"
-            ),
+            ("chr1\t100\t100\t.\t1\t+\nchr2\t101\t101\t.\t2\t+\n"),
+            ("chr2\t101\t101\t.\t2\t+\nchr1\t100\t100\t.\t1\t+\n"),
         ),
     ],
     ids=[
@@ -168,6 +121,7 @@ def test_valid_score_sorting(
 
     # Assert that the output matches the expected output
     assert output_bed == expected_output
+
 
 @pytest.mark.parametrize(
     "input_bed, error_type, error_msg",

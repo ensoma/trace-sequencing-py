@@ -13,31 +13,39 @@ SAMBAM_INPUT = SamBamInputType()
 SAMBAM_OUTPUT = SamBamOutputType()
 DISCARDED_SAMBAM_OUTPUT = SamBamOutputType()
 
+
 # The bed subcommand group
 @click.group()
 def bed() -> None:
     """BED file CLI."""
 
+
 @bed.command("sort")
 @click.option(
-    "-i", "--infile",
+    "-i",
+    "--infile",
     "infile",
     type=click.File("r"),
-    default="-", show_default=True,
+    default="-",
+    show_default=True,
     help="Input BED file or stdin (use '-' for stdin)",
 )
 @click.option(
-    "-o", "--outfile",
+    "-o",
+    "--outfile",
     "outfile",
     type=click.File("w"),
-    default="-", show_default=True,
+    default="-",
+    show_default=True,
     help="Output BED file or stdout (use '-' for stdout)",
 )
 @click.option(
-    "-s", "--sort-by",
+    "-s",
+    "--sort-by",
     "sort_by",
     type=click.Choice(["position", "score"], case_sensitive=False),
-    default="position", show_default=True,
+    default="position",
+    show_default=True,
     help="Sort by position or score",
 )
 def sort_cmd(
@@ -47,43 +55,50 @@ def sort_cmd(
 ) -> None:
     """Sort BED file by position or score."""
     from isatoolkit2.bed.sort import sort_bed
+
     sort_bed(
         infile=infile,
         outfile=outfile,
         sort_by=sort_by,
     )
 
+
 @bed.command("merge")
 @click.option(
-    "-i", "--infile",
+    "-i",
+    "--infile",
     "infile",
     type=click.File("r"),
-    default="-", show_default=True,
+    default="-",
+    show_default=True,
     help="Input BED file or stdin (use '-' for stdin)",
 )
 @click.option(
-    "-o", "--outfile",
+    "-o",
+    "--outfile",
     "outfile",
     type=click.File("w"),
-    default="-", show_default=True,
+    default="-",
+    show_default=True,
     help="Output BED file or stdout (use '-' for stdout)",
 )
 @click.option(
-    "-d", "--distance",
+    "-d",
+    "--distance",
     "distance",
     type=int,
-    default=5, show_default=True,
+    default=5,
+    show_default=True,
     help="Distance to merge proximal integration sites",
 )
 @click.option(
-    "-m", "--mode",
+    "-m",
+    "--mode",
     "mode",
     type=click.Choice(["median"], case_sensitive=False),
-    default="median", show_default=True,
-    help=(
-        "Mode for merging integration sites "
-        "(currently only median supported)"
-    ),
+    default="median",
+    show_default=True,
+    help=("Mode for merging integration sites (currently only median supported)"),
 )
 def merge_cmd(
     infile: click.utils.LazyFile | TextIO,
@@ -93,6 +108,7 @@ def merge_cmd(
 ) -> None:
     """Merge proximal integration sites in a BED file."""
     from isatoolkit2.bed.merge import merge_integration_sites
+
     merge_integration_sites(
         infile=infile,
         outfile=outfile,
@@ -100,24 +116,30 @@ def merge_cmd(
         mode=mode,
     )
 
+
 # The sam subcommand group
 @click.group()
 def sam() -> None:
     """SAM file CLI."""
 
+
 @sam.command("mapping-filter")
 @click.option(
-    "-i", "--infile",
+    "-i",
+    "--infile",
     "infile",
     type=SAMBAM_INPUT,
-    default="-", show_default=True,
+    default="-",
+    show_default=True,
     help="Input SAM/BAM file or stdin (use '-' for stdin)",
 )
 @click.option(
-    "-o", "--outfile",
+    "-o",
+    "--outfile",
     "outfile",
     type=SAMBAM_OUTPUT,
-    default="-", show_default=True,
+    default="-",
+    show_default=True,
     help="Output SAM/BAM file or stdout (use '-' for stdout)",
 )
 @click.option(
@@ -125,7 +147,8 @@ def sam() -> None:
     "no_alt_filtering",
     is_flag=True,
     type=bool,
-    default=False, show_default=True,
+    default=False,
+    show_default=True,
     help="Turn off ALT filtering",
 )
 @click.option(
@@ -133,26 +156,31 @@ def sam() -> None:
     "no_sup_filtering",
     is_flag=True,
     type=bool,
-    default=False, show_default=True,
+    default=False,
+    show_default=True,
     help="Turn off SUP filtering",
 )
 @click.option(
-    "-f", "--outfile-format",
+    "-f",
+    "--outfile-format",
     "outfile_format",
     type=click.Choice(["sam", "bam"], case_sensitive=False),
     required=True,
     help="Output format (sam or bam)",
 )
 @click.option(
-    "-u", "--uncompressed",
+    "-u",
+    "--uncompressed",
     "uncompressed",
     is_flag=True,
     type=bool,
-    default=False, show_default=True,
+    default=False,
+    show_default=True,
     help="Output uncompressed BAM file",
 )
 @click.option(
-    "-d", "--discarded-outfile",
+    "-d",
+    "--discarded-outfile",
     "discarded_outfile",
     type=DISCARDED_SAMBAM_OUTPUT,
     help="Output discarded reads to a separate file",
@@ -169,6 +197,7 @@ def mapping_filter_cmd(
 ) -> None:
     """Filter SAM/BAM file."""
     from isatoolkit2.sam.mapping_filter import alt_sup_filtering
+
     alt_sup_filtering(
         infile=infile,
         outfile=outfile,
@@ -179,47 +208,58 @@ def mapping_filter_cmd(
         discarded_outfile=discarded_outfile,
     )
 
+
 @sam.command("fiveprime-filter")
 @click.option(
-    "-i", "--infile",
+    "-i",
+    "--infile",
     "infile",
     type=SAMBAM_INPUT,
-    default="-", show_default=True,
+    default="-",
+    show_default=True,
     help="Input SAM/BAM file or stdin (use '-' for stdin)",
 )
 @click.option(
-    "-o", "--outfile",
+    "-o",
+    "--outfile",
     "outfile",
     type=SAMBAM_OUTPUT,
-    default="-", show_default=True,
+    default="-",
+    show_default=True,
     help="Output SAM/BAM file or stdout (use '-' for stdout)",
 )
 @click.option(
-    "-f", "--outfile-format",
+    "-f",
+    "--outfile-format",
     "outfile_format",
     type=click.Choice(["sam", "bam"], case_sensitive=False),
     required=True,
     help="Output format (sam or bam)",
 )
 @click.option(
-    "-u", "--uncompressed",
+    "-u",
+    "--uncompressed",
     "uncompressed",
     is_flag=True,
     type=bool,
-    default=False, show_default=True,
+    default=False,
+    show_default=True,
     help="Output uncompressed BAM file",
 )
 @click.option(
-    "-d", "--discarded-outfile",
+    "-d",
+    "--discarded-outfile",
     "discarded_outfile",
     type=DISCARDED_SAMBAM_OUTPUT,
     help="Output discarded reads to a separate file",
 )
 @click.option(
-    "-m", "--max-softclip",
+    "-m",
+    "--max-softclip",
     "max_softclip",
     type=int,
-    default=5, show_default=True,
+    default=5,
+    show_default=True,
     help="Maximum softclip length",
 )
 def fiveprime_filter_cmd(
@@ -233,6 +273,7 @@ def fiveprime_filter_cmd(
 ) -> None:
     """Filter SAM/BAM file based on 5' softclipping."""
     from isatoolkit2.sam.fiveprime_filter import fiveprime_filter
+
     fiveprime_filter(
         infile=infile,
         outfile=outfile,
@@ -242,19 +283,24 @@ def fiveprime_filter_cmd(
         discarded_outfile=discarded_outfile,
     )
 
+
 @sam.command("count")
 @click.option(
-    "-i", "--infile",
+    "-i",
+    "--infile",
     "infile",
     type=SAMBAM_INPUT,
-    default="-", show_default=True,
+    default="-",
+    show_default=True,
     help="Input SAM/BAM file or stdin (use '-' for stdin)",
 )
 @click.option(
-    "-o", "--outfile",
+    "-o",
+    "--outfile",
     "outfile",
     type=click.File("w"),
-    default="-", show_default=True,
+    default="-",
+    show_default=True,
     help="Output BED file or stdout (use '-' for stdout)",
 )
 def count_cmd(
@@ -263,15 +309,18 @@ def count_cmd(
 ) -> None:
     """Count integration sites in a SAM/BAM file."""
     from isatoolkit2.sam.count import count_integration_sites
+
     count_integration_sites(
         infile=infile,
         outfile=outfile,
     )
 
+
 # The CLI entry point
 @click.group()
 def cli() -> None:
     """ISA Toolkit 2 - Tools for processing sequencing data."""
+
 
 # Add the subcommands to the main CLI group
 cli.add_command(sam)

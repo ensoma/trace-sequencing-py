@@ -11,6 +11,7 @@ from isatoolkit2.sam.sam_utils import get_output_mode
 
 SOFTCLIP_INDEX = 4
 
+
 def softclipped_bases(
     read: pysam.AlignedSegment,
 ) -> int | None:
@@ -24,6 +25,7 @@ def softclipped_bases(
         return read.cigartuples[0][1]
     return 0
 
+
 def fiveprime_filter(
     infile: Literal["-"] | Path,
     outfile: Literal["-"] | Path,
@@ -36,7 +38,8 @@ def fiveprime_filter(
     """Filter R1 reads with too many softclipped bases on the 5' end."""
     # Set the output mode based on the output format and compression options
     output_mode = get_output_mode(
-        outfile_format, uncompressed=uncompressed,
+        outfile_format,
+        uncompressed=uncompressed,
     )
 
     with ExitStack() as stack:
@@ -58,7 +61,8 @@ def fiveprime_filter(
                     template=infile_handle,
                 ),
             )
-            if discarded_outfile is not None else None
+            if discarded_outfile is not None
+            else None
         )
 
         # Iterate over each read in the input file

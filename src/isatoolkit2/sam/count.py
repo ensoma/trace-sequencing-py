@@ -28,6 +28,7 @@ class PositionCounts:
         default_factory=lambda: defaultdict(int),
     )
 
+
 def count_integration_sites(
     infile: Literal["-"] | Path,
     outfile: click.utils.LazyFile | TextIO,

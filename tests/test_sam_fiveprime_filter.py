@@ -43,10 +43,7 @@ from isatoolkit2.sam.fiveprime_filter import fiveprime_filter
                 "@SQ\tSN:chr1\tLN:1000\n"
                 "read1\t64\tchr1\t100\t60\t6S4M\t*\t0\t0\t*\t*\n"
             ),
-            (
-                "@HD\tVN:1.6\tSO:coordinate\n"
-                "@SQ\tSN:chr1\tLN:1000\n"
-            ),
+            ("@HD\tVN:1.6\tSO:coordinate\n@SQ\tSN:chr1\tLN:1000\n"),
         ),
         # Single R1 read, - strand, filtering
         (
@@ -55,10 +52,7 @@ from isatoolkit2.sam.fiveprime_filter import fiveprime_filter
                 "@SQ\tSN:chr1\tLN:1000\n"
                 "read1\t80\tchr1\t100\t60\t4M6S\t*\t0\t0\t*\t*\n"
             ),
-            (
-                "@HD\tVN:1.6\tSO:coordinate\n"
-                "@SQ\tSN:chr1\tLN:1000\n"
-            ),
+            ("@HD\tVN:1.6\tSO:coordinate\n@SQ\tSN:chr1\tLN:1000\n"),
         ),
         # Single R2 read, + strand, no filtering
         (
@@ -112,7 +106,9 @@ def test_fiveprime_filter(
 
     # Run the fiveprime_filter function
     fiveprime_filter(
-        input_file, output_file, outfile_format="sam",
+        input_file,
+        output_file,
+        outfile_format="sam",
     )
 
     # Read the output file and check its contents

@@ -16,16 +16,15 @@ class SamBamInputSchema(BaseModel):
 
     @field_validator("input", mode="after")
     def check_input(
-        cls, value: Literal["-"] | Path,
+        cls,
+        value: Literal["-"] | Path,
     ) -> Literal["-"] | Path:
         """Check if the file is a SAM/BAM file."""
-        if (
-            isinstance(value, Path) and
-            value.suffix.lower() not in [".sam", ".bam"]
-        ):
-                error_msg = f"File {value} is not a SAM/BAM file"
-                raise ValueError(error_msg)
+        if isinstance(value, Path) and value.suffix.lower() not in [".sam", ".bam"]:
+            error_msg = f"File {value} is not a SAM/BAM file"
+            raise ValueError(error_msg)
         return value
+
 
 class SamBamInputType(click.ParamType):
 
@@ -47,6 +46,7 @@ class SamBamInputType(click.ParamType):
         else:
             return value
 
+
 # SAM/BAM outputs
 class SamBamOutputSchema(BaseModel):
 
@@ -56,16 +56,15 @@ class SamBamOutputSchema(BaseModel):
 
     @field_validator("output", mode="after")
     def check_output(
-        cls, value: Literal["-"] | Path,
+        cls,
+        value: Literal["-"] | Path,
     ) -> Literal["-"] | Path:
         """Check if the file is a SAM/BAM file."""
-        if (
-            isinstance(value, Path) and
-            value.suffix.lower() not in [".sam", ".bam"]
-        ):
+        if isinstance(value, Path) and value.suffix.lower() not in [".sam", ".bam"]:
             error_msg = f"File {value} is not a SAM/BAM file"
             raise ValueError(error_msg)
         return value
+
 
 class SamBamOutputType(click.ParamType):
 
@@ -87,6 +86,7 @@ class SamBamOutputType(click.ParamType):
         else:
             return value
 
+
 # SAM/BAM discarded output
 class SamBamDiscardedOutputSchema(BaseModel):
 
@@ -96,16 +96,15 @@ class SamBamDiscardedOutputSchema(BaseModel):
 
     @field_validator("discarded_output", mode="after")
     def check_discarded_output(
-        cls, value: Literal["-"] | Path,
+        cls,
+        value: Literal["-"] | Path,
     ) -> Literal["-"] | Path:
         """Check if the file is a SAM/BAM file."""
-        if (
-            isinstance(value, Path) and
-            value.suffix.lower() not in [".sam", ".bam"]
-        ):
+        if isinstance(value, Path) and value.suffix.lower() not in [".sam", ".bam"]:
             error_msg = f"File {value} is not a SAM/BAM file"
             raise ValueError(error_msg)
         return value
+
 
 class SamBamDiscardedOutputType(click.ParamType):
 

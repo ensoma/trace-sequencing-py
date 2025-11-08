@@ -12,6 +12,7 @@ from isatoolkit2.bed.bed_utils import BedLine, Strand, natural_key
 
 MIN_BED_COLS = 6
 
+
 def read_lines(
     infile: click.utils.LazyFile | TextIO,
 ) -> list[BedLine]:
@@ -37,6 +38,7 @@ def read_lines(
                 ),
             )
     return lines
+
 
 def merge_integration_sites(
     infile: click.utils.LazyFile | TextIO,
@@ -77,14 +79,14 @@ def merge_integration_sites(
 
         # Iterate over all integration sites in the same chromosome and strand.
         while entries:
-            current_entry = entries.popleft() # The first entry in the deque
+            current_entry = entries.popleft()  # The first entry in the deque
 
             # Initialize variables for the current entry.
-            proximal_entries = [current_entry] # List of proximal entries
-            total_score = current_entry.score # Total score of proximal entries
-            max_score = current_entry.score # Maximum score of proximal entries
-            highest_entries = [current_entry] # List of highest scoring entries
-            current_start = current_entry.start # Current start position
+            proximal_entries = [current_entry]  # List of proximal entries
+            total_score = current_entry.score  # Total score of proximal entries
+            max_score = current_entry.score  # Maximum score of proximal entries
+            highest_entries = [current_entry]  # List of highest scoring entries
+            current_start = current_entry.start  # Current start position
 
             # Find all entries within distance - implement proper chaining
             i = 0
@@ -98,8 +100,8 @@ def merge_integration_sites(
                 if abs(next_entry.start - current_start) <= distance:
                     # Remove the entry from the queue and don't increment i
                     entries.remove(next_entry)
-                    proximal_entries.append(next_entry) # Add to proximal entries
-                    total_score += next_entry.score # Update total score
+                    proximal_entries.append(next_entry)  # Add to proximal entries
+                    total_score += next_entry.score  # Update total score
 
                     # Update current_start for chaining behavior - this is critical
                     current_start = next_entry.start
@@ -120,8 +122,7 @@ def merge_integration_sites(
             # Select the median entry
             positions = sorted(entry.start for entry in highest_entries)
             median_pos = (
-                round(median(positions)) if len(positions) > 1
-                else positions[0]
+                round(median(positions)) if len(positions) > 1 else positions[0]
             )
             median_entry = highest_entries[0]
             median_entry.score = total_score
